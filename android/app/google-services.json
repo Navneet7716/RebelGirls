@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "209900313842",
+    "project_id": "rebelgirls-d3f0d",
+    "storage_bucket": "rebelgirls-d3f0d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:209900313842:android:1e83eb1072d35d37e5c46b",
+        "android_client_info": {
+          "package_name": "com.rebelgirls.rebel_girls"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "209900313842-2nqh7dnhvbhjkk37p6kvm52bo14snvva.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAqzz0PMSOOlWjcX4gsXxMaOAlAawthNfQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "209900313842-2nqh7dnhvbhjkk37p6kvm52bo14snvva.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
