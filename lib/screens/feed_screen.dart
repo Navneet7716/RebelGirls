@@ -32,9 +32,11 @@ class FeedScreen extends StatelessWidget {
               onSelected: (value) async {
                 if (value == 0) {
                   await AuthMethods().signOut();
-                  Navigator.of(context).pop();
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const LoginScreen()));
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (context) => const LoginScreen(),
+                    ),
+                  );
                 }
               }),
         ],
