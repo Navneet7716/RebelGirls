@@ -44,32 +44,32 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        theme: ThemeData.dark()
+        theme: ThemeData.light()
             .copyWith(scaffoldBackgroundColor: mobileBackgroundColor),
         title: 'Rebel Girls',
         home: StreamBuilder(
             stream: FirebaseAuth.instance.authStateChanges(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.active) {
+                // Checking if the snapshot has any data or not
                 if (snapshot.hasData) {
+                  // if snapshot has data which means user is logged in then we check the width of screen and accordingly display the screen layout
                   return const ResponsiveLayout(
                     mobileScreenLayout: MobileScreenLayout(),
                     webScreenLayout: WebScreenLayout(),
                   );
-                } else if (snapshot.hasError) {
-                  return Center(
-                    child: Text('${snapshot.error}'),
-                  );
-                }
-
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                    child: CircularProgressIndicator(
-                      color: primaryColor,
-                    ),
-                  );
+                } else {
+                  return const LoginScreen();
                 }
               }
+
+              // means connection to future hasnt been made yet
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+
               return const LoginScreen();
             }),
       ),

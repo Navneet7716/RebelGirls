@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rebel_girls/utils/colors.dart';
 import 'package:rebel_girls/utils/global_variables.dart';
@@ -45,50 +44,47 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
         controller: pageController,
         onPageChanged: onPageChanged,
       ),
-      bottomNavigationBar: CupertinoTabBar(
-        backgroundColor: mobileBackgroundColor,
+      bottomNavigationBar: BottomNavigationBar(
+        fixedColor: primaryColor,
         items: [
           BottomNavigationBarItem(
-            icon: Icon(
-              Icons.home,
-              color: _page == 0 ? primaryColor : secondaryColor,
-            ),
-            label: '',
-            backgroundColor: primaryColor,
-          ),
+              icon: Icon(
+                Icons.home,
+                color: _page == 0 ? primaryColor : secondaryColor,
+              ),
+              label: 'Home',
+              backgroundColor: mobileBackgroundColor),
+          BottomNavigationBarItem(
+              icon: Icon(
+                Icons.search,
+                color: _page == 1 ? primaryColor : secondaryColor,
+              ),
+              label: 'Search',
+              backgroundColor: mobileBackgroundColor),
+          BottomNavigationBarItem(
+              icon: Icon(
+                Icons.add_circle,
+                color: _page == 2 ? primaryColor : secondaryColor,
+              ),
+              label: 'Event',
+              backgroundColor: mobileBackgroundColor),
+          // BottomNavigationBarItem(
+          //   icon: Icon(
+          //     Icons.favorite,
+          //     color: _page == 3 ? primaryColor : secondaryColor,
+          //   ),
+          //   label: 'Notification',
+          // ),
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.search,
-              color: _page == 1 ? primaryColor : secondaryColor,
-            ),
-            label: '',
-            backgroundColor: primaryColor,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.add_circle,
-              color: _page == 2 ? primaryColor : secondaryColor,
-            ),
-            label: '',
-            backgroundColor: primaryColor,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.favorite,
+              Icons.assignment_rounded,
               color: _page == 3 ? primaryColor : secondaryColor,
             ),
-            label: '',
-            backgroundColor: primaryColor,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.person,
-              color: _page == 4 ? primaryColor : secondaryColor,
-            ),
-            label: '',
-            backgroundColor: primaryColor,
+            label: 'About',
+            backgroundColor: mobileBackgroundColor,
           ),
         ],
+        currentIndex: _page,
         onTap: navigationTapped,
       ),
     );

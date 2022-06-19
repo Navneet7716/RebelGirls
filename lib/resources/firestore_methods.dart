@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -10,8 +11,19 @@ import 'package:rebel_girls/resources/storage_methods.dart';
 class FireStoreMethods {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<String> uploadPost(String description, Uint8List file, String uid,
-      String username, String profImage) async {
+  Future<String> uploadPost(
+      String title,
+      String description,
+      Uint8List file,
+      String uid,
+      String username,
+      String profImage,
+      eventStartTime,
+      eventEndTime,
+      DateTime eventDate,
+      String venue,
+      String? eventLink,
+      String? eventAddress) async {
     String res = "Some error occurred";
     try {
       String photoUrl =
@@ -20,7 +32,14 @@ class FireStoreMethods {
       String postId = const Uuid().v1();
 
       Post post = Post(
+          eventDate: eventDate,
+          eventEndTime: eventEndTime,
+          eventStartTime: eventStartTime,
+          eventAddress: eventAddress,
+          venue: venue,
+          eventLink: eventLink,
           description: description,
+          title: title,
           uid: uid,
           postId: postId,
           username: username,
@@ -57,27 +76,40 @@ class FireStoreMethods {
     }
   }
 
-  Future<void> postComment(String postId, String text, String uid,
-      String name, String profilePic) async {
+  Future<void> postComment(String postId, String text, String uid, String name,
+      String profilePic) async {
     try {
-
       if (text.isNotEmpty) {
-
         String commentId = const Uuid().v1();
 
-        await _firestore.collection('posts').doc(postId).collection('comments').doc(commentId).set({
-          'profilePic' : profilePic,
-          'name' : name,
-          'uid' : uid,
+        await _firestore
+            .collection('posts')
+            .doc(postId)
+            .collection('comments')
+            .doc(commentId)
+            .set({
+          'profilePic': profilePic,
+          'name': name,
+          'uid': uid,
           'text': text,
-          'commentId' : commentId,
-          'datePublished' : DateTime.now(),
+          'commentId': commentId,
+          'datePublished': DateTime.now(),
         });
-      }
-      else {
+      } else {
         print('Text is Empty!');
       }
+    } catch (e) {
+      if (kDebugMode) {
+        print(e.toString());
+      }
+    }
+  }
 
+  // deleating post
+
+  Future<void> deletePost(String postId) async {
+    try {
+      await _firestore.collection('posts').doc(postId).delete();
     } catch (e) {
       if (kDebugMode) {
         print(e.toString());

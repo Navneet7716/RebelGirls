@@ -22,7 +22,7 @@ class _CommentCardState extends State<CommentCard> {
         children: [
           CircleAvatar(
             backgroundImage: NetworkImage(
-            widget.snap['profilePic'],
+              widget.snap['profilePic'],
             ),
             radius: 18,
           ),
@@ -40,20 +40,23 @@ class _CommentCardState extends State<CommentCard> {
                           text: '${widget.snap['name']}',
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
+                            color: Colors.black,
                           ),
                         ),
                         TextSpan(
-                          text: ' ${widget.snap['text']}',
-                        ),
+                            text: ' ${widget.snap['text']}',
+                            style: const TextStyle(
+                              color: Colors.black,
+                            )),
                       ],
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 4),
                     child: Text(
-                      DateFormat.yMMMd().format(widget.snap['datePublished'].toDate()
-                      ),
-                      style: TextStyle(
+                      DateFormat.yMMMd()
+                          .format(widget.snap['datePublished'].toDate()),
+                      style: const TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w400,
                       ),
@@ -63,10 +66,6 @@ class _CommentCardState extends State<CommentCard> {
               ),
             ),
           ),
-          Container(
-            padding: const EdgeInsets.all(8),
-            child: const Icon(Icons.favorite, size: 16),
-          )
         ],
       ),
     );

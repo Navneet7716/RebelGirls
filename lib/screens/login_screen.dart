@@ -58,7 +58,8 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       body: SafeArea(
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 32),
+          decoration: BoxDecoration(color: Color.fromARGB(255, 240, 240, 240)),
+          padding: const EdgeInsets.symmetric(horizontal: 10),
           width: double.infinity,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -67,57 +68,71 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Container(),
                 flex: 2,
               ),
-              // svg image
-              SvgPicture.asset(
-                'assets/ic_instagram.svg',
-                color: primaryColor,
-                height: 64,
-              ),
-              // text field input for email
-              const SizedBox(
-                height: 64,
-              ),
-              TextFieldInput(
-                  textEditingController: _emailController,
-                  hintText: 'Enter your email',
-                  textInputType: TextInputType.emailAddress),
-              const SizedBox(
-                height: 24,
-              ),
-              // text field input for password
-              TextFieldInput(
-                textEditingController: _passwordController,
-                hintText: 'Enter your password',
-                textInputType: TextInputType.text,
-                isPass: true,
-              ),
-              const SizedBox(
-                height: 24,
-              ),
-              // button login
-              InkWell(
-                onTap: loginUser,
-                child: Container(
-                  child: _isLoading
-                      ? const Center(
-                          child: CircularProgressIndicator(
-                            color: primaryColor,
+              Card(
+                elevation: 5,
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(children: [
+                    const Text(
+                      'Rebel Girls',
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontFamily: 'Pacifico',
+                          fontSize: 45),
+                    ),
+                    // text field input for email
+                    const SizedBox(
+                      height: 64,
+                    ),
+                    TextFieldInput(
+                        textEditingController: _emailController,
+                        hintText: 'Enter your email',
+                        textInputType: TextInputType.emailAddress),
+                    const SizedBox(
+                      height: 24,
+                    ),
+                    // text field input for password
+                    TextFieldInput(
+                      textEditingController: _passwordController,
+                      hintText: 'Enter your password',
+                      textInputType: TextInputType.text,
+                      isPass: true,
+                    ),
+                    const SizedBox(
+                      height: 24,
+                    ),
+                    // button login
+                    InkWell(
+                      onTap: loginUser,
+                      child: Container(
+                        child: _isLoading
+                            ? const Center(
+                                child: CircularProgressIndicator(
+                                  color: primaryColor,
+                                ),
+                              )
+                            : const Text(
+                                'Log in',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                        width: double.infinity,
+                        alignment: Alignment.center,
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        decoration: const ShapeDecoration(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(4),
+                            ),
                           ),
-                        )
-                      : const Text('Log in'),
-                  width: double.infinity,
-                  alignment: Alignment.center,
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  decoration: const ShapeDecoration(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(4),
+                          color: blueColor,
+                        ),
                       ),
                     ),
-                    color: blueColor,
-                  ),
+                  ]),
                 ),
               ),
+              // svg image
+
               const SizedBox(
                 height: 12,
               ),
@@ -146,7 +161,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                 ],
-              )
+              ),
+              const SizedBox(
+                height: 15,
+              ),
             ],
           ),
         ),

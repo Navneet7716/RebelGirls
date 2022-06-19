@@ -31,9 +31,11 @@ class _CommentsScreenState extends State<CommentsScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: mobileBackgroundColor,
-        title: const Text('Comments'),
-        centerTitle: false,
+        backgroundColor: Color.fromARGB(255, 93, 93, 93),
+        title: const Text(
+          'Comments',
+        ),
+        centerTitle: true,
       ),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance
@@ -48,11 +50,17 @@ class _CommentsScreenState extends State<CommentsScreen> {
               child: CircularProgressIndicator(),
             );
           }
+
+          if ((snapshot.data! as dynamic).docs.length == 0) {
+            return const Center(
+              child: Text('No Comments yet!'),
+            );
+          }
+
           return ListView.builder(
             itemCount: (snapshot.data! as dynamic).docs.length,
             itemBuilder: (context, index) => CommentCard(
-              snap : (snapshot.data! as dynamic).docs[index].data()
-            ),
+                snap: (snapshot.data! as dynamic).docs[index].data()),
           );
         },
       ),
@@ -96,7 +104,7 @@ class _CommentsScreenState extends State<CommentsScreen> {
                 child: Container(
                   padding:
                       const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-                  child: Text(
+                  child: const Text(
                     'Post',
                     style: TextStyle(
                       color: Colors.blueAccent,

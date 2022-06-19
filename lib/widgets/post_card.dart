@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -6,7 +8,10 @@ import 'package:rebel_girls/providers/user_provider.dart';
 import 'package:rebel_girls/resources/firestore_methods.dart';
 import 'package:rebel_girls/screens/comments_screen.dart';
 import 'package:rebel_girls/utils/colors.dart';
+import 'package:rebel_girls/utils/utils.dart';
+import 'package:rebel_girls/widgets/expandable_text.dart';
 import 'package:rebel_girls/widgets/like_animation.dart';
+import 'package:readmore/readmore.dart';
 
 class PostCard extends StatefulWidget {
   final snap;
@@ -19,11 +24,33 @@ class PostCard extends StatefulWidget {
 
 class _PostCardState extends State<PostCard> {
   bool isLikeAnimating = false;
+  int commentLen = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    getComments();
+  }
+
+  void getComments() async {
+    try {
+      QuerySnapshot snap = await FirebaseFirestore.instance
+          .collection('posts')
+          .doc(widget.snap['postId'])
+          .collection('comments')
+          .get();
+
+      commentLen = snap.docs.length;
+    } catch (e) {
+      showSnackBar(e.toString(), context);
+    }
+
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
     final User user = Provider.of<UserProvider>(context).getUser;
-
     return Container(
       color: mobileBackgroundColor,
       padding: const EdgeInsets.symmetric(vertical: 10),
@@ -50,8 +77,9 @@ class _PostCardState extends State<PostCard> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          widget.snap['username'],
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          widget.snap['title'],
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, color: Colors.black),
                         )
                       ],
                     ),
@@ -70,7 +98,16 @@ class _PostCardState extends State<PostCard> {
                               ]
                                   .map(
                                     (e) => InkWell(
-                                      onTap: () {},
+                                      onTap: () async {
+                                        if (kDebugMode) {
+                                          print(widget.snap);
+                                        }
+
+                                        await FireStoreMethods()
+                                            .deletePost(widget.snap['postId']);
+
+                                        Navigator.of(context).pop();
+                                      },
                                       child: Container(
                                         padding: const EdgeInsets.symmetric(
                                             vertical: 12, horizontal: 16),
@@ -83,6 +120,7 @@ class _PostCardState extends State<PostCard> {
                   },
                   icon: const Icon(
                     Icons.more_vert,
+                    color: Colors.black,
                   ),
                 ),
               ],
@@ -145,7 +183,10 @@ class _PostCardState extends State<PostCard> {
                           Icons.favorite,
                           color: Colors.red,
                         )
-                      : const Icon(Icons.favorite_border),
+                      : const Icon(
+                          Icons.favorite_border,
+                          color: Colors.black,
+                        ),
                 ),
                 isAnimating: widget.snap['likes'].contains(user.uid),
                 smallLike: true,
@@ -154,13 +195,13 @@ class _PostCardState extends State<PostCard> {
                 onPressed: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => CommentsScreen(
-                          snap: widget.snap),
+                      builder: (context) => CommentsScreen(snap: widget.snap),
                     ),
                   );
                 },
                 icon: const Icon(
                   Icons.comment_outlined,
+                  color: Colors.black,
                 ),
               ),
               IconButton(
@@ -173,7 +214,10 @@ class _PostCardState extends State<PostCard> {
                   child: Align(
                 alignment: Alignment.bottomRight,
                 child: IconButton(
-                  icon: const Icon(Icons.bookmark_border_rounded),
+                  icon: const Icon(
+                    Icons.bookmark_border_rounded,
+                    color: Colors.black,
+                  ),
                   onPressed: () {},
                 ),
               ))
@@ -200,33 +244,36 @@ class _PostCardState extends State<PostCard> {
                   ),
                 ),
                 Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.only(
-                    top: 8,
-                  ),
-                  child: RichText(
-                    text: TextSpan(
-                        style: const TextStyle(color: Colors.white),
-                        children: [
-                          TextSpan(
-                            text: widget.snap['username'],
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          TextSpan(
-                            text: ' ${widget.snap['description']} ',
-                          ),
-                        ]),
-                  ),
-                ),
+                    width: double.infinity,
+                    padding: const EdgeInsets.only(
+                      top: 8,
+                    ),
+                    child: ExpandableText('${widget.snap['description']}')
+                    // RichText(
+                    //   text: TextSpan(
+                    //       style: const TextStyle(
+                    //           color: Color.fromARGB(255, 0, 0, 0)),
+                    //       children: [
+                    //         TextSpan(
+                    //           text: '${widget.snap['description']} ',
+                    //         ),
+                    //       ]),
+                    // ),
+                    ),
                 InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => CommentsScreen(snap: widget.snap),
+                      ),
+                    );
+                  },
                   child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 4),
-                    child: const Text(
-                      'View all 200 comments',
-                      style: TextStyle(fontSize: 16, color: secondaryColor),
+                    child: Text(
+                      'View all $commentLen comments',
+                      style:
+                          const TextStyle(fontSize: 16, color: secondaryColor),
                     ),
                   ),
                 ),
