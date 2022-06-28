@@ -31,7 +31,7 @@ class _CommentsScreenState extends State<CommentsScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 93, 93, 93),
+        backgroundColor: secondaryAppBarColor,
         title: const Text(
           'Comments',
         ),
@@ -49,9 +49,7 @@ class _CommentsScreenState extends State<CommentsScreen> {
             return const Center(
               child: CircularProgressIndicator(),
             );
-          }
-
-          if ((snapshot.data! as dynamic).docs.length == 0) {
+          } else if ((snapshot.data! as dynamic).docs.length == 0) {
             return const Center(
               child: Text('No Comments yet!'),
             );
@@ -78,14 +76,12 @@ class _CommentsScreenState extends State<CommentsScreen> {
                 radius: 18,
               ),
               Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 16, right: 8),
-                  child: TextField(
-                    controller: _commentController,
-                    decoration: InputDecoration(
-                        hintText: 'Comment as ${user.username}',
-                        border: InputBorder.none),
-                  ),
+                flex: 1,
+                child: TextField(
+                  controller: _commentController,
+                  decoration: InputDecoration(
+                      hintText: 'Comment as ${user.username}',
+                      border: InputBorder.none),
                 ),
               ),
               InkWell(

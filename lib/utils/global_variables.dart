@@ -5,7 +5,7 @@ import 'package:rebel_girls/screens/feed_screen.dart';
 
 const homeScreenItems = [
   FeedScreen(),
-  Text('search'),
+  // Text('search'),
   AddPostScreen(),
   AboutScreen(),
 ];

@@ -40,15 +40,24 @@ dependencies:
   uuid: 3.0.6
   intl: ^0.17.0
   readmore: ^2.0.0
+  url_launcher: ^6.1.4
+  simple_markdown_editor: ^0.2.0
+  carousel_slider: ^4.1.1
 
 dev_dependencies:
   flutter_lints: ^1.0.0
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: ^0.9.3
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 # The following section is specific to Flutter.
+flutter_icons:
+  android: true
+  image_path: "assets/logo.png"
+
+
 flutter:
 
   # The following line ensures that the Material Icons font is
@@ -75,6 +84,11 @@ flutter:
       fonts:
         - asset: assets/Pacifico-Regular.ttf
           weight: 400
+    - family: NotoSans
+      fonts:
+        - asset: assets/NotoSans-Regular.ttf
+          weight: 400
+
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

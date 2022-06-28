@@ -69,8 +69,8 @@ class _SignupScreenState extends State<SignupScreen> {
   }
 
   void navigatetoLogin() {
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => const LoginScreen()));
+    Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => const LoginScreen()));
   }
 
   @override
@@ -185,7 +185,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           Radius.circular(4),
                         ),
                       ),
-                      color: blueColor,
+                      color: primaryButtonColor,
                     ),
                   ),
                 ),

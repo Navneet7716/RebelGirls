@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rebel_girls/utils/colors.dart';
 import 'package:rebel_girls/utils/global_variables.dart';
@@ -44,8 +45,9 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
         controller: pageController,
         onPageChanged: onPageChanged,
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        fixedColor: primaryColor,
+      bottomNavigationBar: CupertinoTabBar(
+        height: 55,
+        activeColor: Colors.black,
         items: [
           BottomNavigationBarItem(
               icon: Icon(
@@ -54,17 +56,17 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
               ),
               label: 'Home',
               backgroundColor: mobileBackgroundColor),
-          BottomNavigationBarItem(
-              icon: Icon(
-                Icons.search,
-                color: _page == 1 ? primaryColor : secondaryColor,
-              ),
-              label: 'Search',
-              backgroundColor: mobileBackgroundColor),
+          // BottomNavigationBarItem(
+          //     icon: Icon(
+          //       Icons.search,
+          //       color: _page == 1 ? primaryColor : secondaryColor,
+          //     ),
+          //     label: 'Search',
+          //     backgroundColor: mobileBackgroundColor),
           BottomNavigationBarItem(
               icon: Icon(
                 Icons.add_circle,
-                color: _page == 2 ? primaryColor : secondaryColor,
+                color: _page == 1 ? primaryColor : secondaryColor,
               ),
               label: 'Event',
               backgroundColor: mobileBackgroundColor),
@@ -78,7 +80,7 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
           BottomNavigationBarItem(
             icon: Icon(
               Icons.assignment_rounded,
-              color: _page == 3 ? primaryColor : secondaryColor,
+              color: _page == 2 ? primaryColor : secondaryColor,
             ),
             label: 'About',
             backgroundColor: mobileBackgroundColor,

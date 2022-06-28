@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:rebel_girls/resources/auth_methods.dart';
 import 'package:rebel_girls/responsive/mobile_screen_layout.dart';
 import 'package:rebel_girls/responsive/responsive_layout_screen.dart';
@@ -49,8 +48,8 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void navigatetoSignup() {
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => const SignupScreen()));
+    Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => const SignupScreen()));
   }
 
   @override
@@ -58,7 +57,8 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       body: SafeArea(
         child: Container(
-          decoration: BoxDecoration(color: Color.fromARGB(255, 240, 240, 240)),
+          decoration:
+              const BoxDecoration(color: Color.fromARGB(255, 240, 240, 240)),
           padding: const EdgeInsets.symmetric(horizontal: 10),
           width: double.infinity,
           child: Column(
@@ -108,7 +108,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: _isLoading
                             ? const Center(
                                 child: CircularProgressIndicator(
-                                  color: primaryColor,
+                                  color: whiteColor,
                                 ),
                               )
                             : const Text(
@@ -124,7 +124,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               Radius.circular(4),
                             ),
                           ),
-                          color: blueColor,
+                          color: primaryButtonColor,
                         ),
                       ),
                     ),

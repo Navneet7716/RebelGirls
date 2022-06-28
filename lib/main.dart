@@ -44,8 +44,12 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        theme: ThemeData.light()
-            .copyWith(scaffoldBackgroundColor: mobileBackgroundColor),
+        theme: ThemeData(
+          fontFamily: 'NotoSans-Regular',
+          colorScheme: ColorScheme.fromSwatch().copyWith(
+            primary: primaryButtonColor,
+          ),
+        ),
         title: 'Rebel Girls',
         home: StreamBuilder(
             stream: FirebaseAuth.instance.authStateChanges(),

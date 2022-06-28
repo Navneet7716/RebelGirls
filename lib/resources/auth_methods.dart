@@ -84,7 +84,7 @@ class AuthMethods {
         res = "Please enter all the fields";
       }
     } catch (err) {
-      res = err.toString();
+      res = "Please check your email and password!";
     }
 
     return res;
