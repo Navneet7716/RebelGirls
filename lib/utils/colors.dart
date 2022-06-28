@@ -13,4 +13,6 @@ const secondaryColor = Color.fromARGB(255, 125, 125, 125);
 
 const secondaryAppBarColor = Color.fromARGB(255, 93, 93, 93);
 
-const primaryButtonColor = Color.fromARGB(255, 254, 54, 92);
+const primaryButtonColor = Color.fromARGB(255, 83, 92, 184);
+
+const primaryTextColor = Colors.black;

@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:rebel_girls/modles/story.dart';
 import 'package:uuid/uuid.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -55,6 +55,42 @@ class FireStoreMethods {
       res = e.toString();
     }
 
+    return res;
+  }
+
+  Future<String> uploadStory(
+    String title,
+    String description,
+    Uint8List file,
+    String uid,
+    String username,
+    String profImage,
+  ) async {
+    String res = "Some error occurred";
+
+    try {
+      String bannerImage =
+          await StorageMethods().uploadImageToStorage('storys', file, true);
+
+      String id = const Uuid().v1();
+
+      Story story = Story(
+        title: title,
+        description: description,
+        id: id,
+        username: username,
+        profImage: profImage,
+        bannerImage: bannerImage,
+        datePublished: DateTime.now(),
+        uid: uid,
+      );
+
+      _firestore.collection('stories').doc(id).set(story.toJson());
+
+      res = "success";
+    } catch (e) {
+      res = e.toString();
+    }
     return res;
   }
 

@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:rebel_girls/utils/colors.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -38,8 +37,17 @@ class _PostDetailsState extends State<PostDetails> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: secondaryAppBarColor,
-        title: const Text('Details'),
+        elevation: 0,
+        backgroundColor: whiteColor,
+        iconTheme: const IconThemeData(color: Colors.black),
+        title: const Text(
+          'Details',
+          style: TextStyle(
+              color: Colors.black,
+              fontFamily: 'Poppins-Bold',
+              fontSize: 25,
+              fontWeight: FontWeight.bold),
+        ),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -221,7 +229,7 @@ class _PostDetailsState extends State<PostDetails> {
                       widget.postData['venue'] == "offline"
                           ? Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const Text(
                                   "Address:",
@@ -230,31 +238,15 @@ class _PostDetailsState extends State<PostDetails> {
                                     fontSize: 16,
                                   ),
                                 ),
-                                (widget.postData['eventAddress'] as String)
-                                            .length >
-                                        30
-                                    ? Expanded(
-                                        child: Container(
-                                          padding: const EdgeInsets.all(8.0),
-                                          margin:
-                                              const EdgeInsets.only(left: 40),
-                                          child: Text(
-                                            '${widget.postData['eventAddress']}',
-                                            style: const TextStyle(
-                                              leadingDistribution:
-                                                  TextLeadingDistribution
-                                                      .proportional,
-                                              fontSize: 16,
-                                            ),
-                                          ),
-                                        ),
-                                      )
-                                    : Text(
-                                        '${widget.postData['eventAddress']}',
-                                        style: const TextStyle(
-                                          fontSize: 16,
-                                        ),
-                                      ),
+                                SizedBox(
+                                  width: 200,
+                                  child: Text(
+                                    '${widget.postData['eventAddress']}',
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ),
                               ],
                             )
                           : Row(
@@ -281,7 +273,7 @@ class _PostDetailsState extends State<PostDetails> {
                                   ),
                                 )
                               ],
-                            )
+                            ),
                     ],
                   ),
                 ),

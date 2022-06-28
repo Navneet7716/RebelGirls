@@ -84,9 +84,9 @@ flutter:
       fonts:
         - asset: assets/Pacifico-Regular.ttf
           weight: 400
-    - family: NotoSans
+    - family: Poppins
       fonts:
-        - asset: assets/NotoSans-Regular.ttf
+        - asset: assets/Poppins-Regular.ttf
           weight: 400
 
   #

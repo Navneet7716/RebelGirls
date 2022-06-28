@@ -45,7 +45,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          fontFamily: 'NotoSans-Regular',
+          fontFamily: 'Poppins',
           colorScheme: ColorScheme.fromSwatch().copyWith(
             primary: primaryButtonColor,
           ),
@@ -54,6 +54,12 @@ class MyApp extends StatelessWidget {
         home: StreamBuilder(
             stream: FirebaseAuth.instance.authStateChanges(),
             builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+
               if (snapshot.connectionState == ConnectionState.active) {
                 // Checking if the snapshot has any data or not
                 if (snapshot.hasData) {
@@ -68,11 +74,6 @@ class MyApp extends StatelessWidget {
               }
 
               // means connection to future hasnt been made yet
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
 
               return const LoginScreen();
             }),

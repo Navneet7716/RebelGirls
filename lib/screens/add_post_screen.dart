@@ -8,7 +8,6 @@ import 'package:rebel_girls/providers/user_provider.dart';
 import 'package:rebel_girls/resources/firestore_methods.dart';
 import 'package:rebel_girls/utils/colors.dart';
 import 'package:rebel_girls/utils/utils.dart';
-import 'package:simple_markdown_editor/simple_markdown_editor.dart';
 
 class AddPostScreen extends StatefulWidget {
   const AddPostScreen({Key? key}) : super(key: key);
@@ -26,8 +25,10 @@ class _AddPostScreenState extends State<AddPostScreen> {
   TimeOfDay eventEndTime = TimeOfDay.now();
   String venue = "online";
   int currentStep = 0;
+  String formType = "event";
 
   var venueList = <String>["online", "offline"];
+  var formTypeList = <String>["event", "story"];
 
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _titleController = TextEditingController();
@@ -43,64 +44,122 @@ class _AddPostScreenState extends State<AddPostScreen> {
     setState(() {
       _isLoading = true;
     });
-    try {
-      if (_file == null) {
-        showSnackBar('Image is Required!', context);
-        setState(() {
-          _isLoading = false;
-        });
-        return;
-      }
 
-      if (_titleController.text.length < 2) {
-        showSnackBar('Title is Required!', context);
-        setState(() {
-          _isLoading = false;
-        });
-        return;
-      }
-      if (_descriptionController.text.length < 2) {
-        showSnackBar('Description is Required!', context);
-        setState(() {
-          _isLoading = false;
-        });
-        return;
-      }
+    if (formType == "event") {
+      try {
+        if (_file == null) {
+          showSnackBar('Image is Required!', context);
+          setState(() {
+            _isLoading = false;
+          });
+          return;
+        }
 
-      String res = await FireStoreMethods().uploadPost(
+        if (_titleController.text.length < 2) {
+          showSnackBar('Title is Required!', context);
+          setState(() {
+            _isLoading = false;
+          });
+          return;
+        }
+        if (_descriptionController.text.length < 2) {
+          showSnackBar('Description is Required!', context);
+          setState(() {
+            _isLoading = false;
+          });
+          return;
+        }
+
+        String res = await FireStoreMethods().uploadPost(
+            _titleController.text,
+            _descriptionController.text,
+            _file!,
+            uid,
+            username,
+            profImage,
+            '${eventStartTime.hourOfPeriod}:${eventStartTime.minute} ${eventStartTime.period.name}',
+            '${eventEndTime.hourOfPeriod}:${eventEndTime.minute} ${eventEndTime.period.name}',
+            eventDate,
+            venue,
+            _linkController.text,
+            _addressController.text);
+
+        if (res == "success") {
+          setState(() {
+            _isLoading = false;
+          });
+          showSnackBar(
+            "Posted!",
+            context,
+          );
+          clearImage();
+        } else {
+          setState(() {
+            _isLoading = false;
+          });
+          showSnackBar(res, context);
+        }
+      } catch (e) {
+        setState(() {
+          _isLoading = false;
+        });
+        showSnackBar(e.toString(), context);
+      }
+    } else {
+      try {
+        if (_file == null) {
+          showSnackBar('Image is Required!', context);
+          setState(() {
+            _isLoading = false;
+          });
+          return;
+        }
+
+        if (_titleController.text.length < 2) {
+          showSnackBar('Title is Required!', context);
+          setState(() {
+            _isLoading = false;
+          });
+          return;
+        }
+        if (_descriptionController.text.length < 2) {
+          showSnackBar('Description is Required!', context);
+          setState(() {
+            _isLoading = false;
+          });
+          return;
+        }
+
+        String res = await FireStoreMethods().uploadStory(
           _titleController.text,
           _descriptionController.text,
           _file!,
           uid,
           username,
           profImage,
-          '${eventStartTime.hourOfPeriod}:${eventStartTime.minute} ${eventStartTime.period.name}',
-          '${eventEndTime.hourOfPeriod}:${eventEndTime.minute} ${eventEndTime.period.name}',
-          eventDate,
-          venue,
-          _linkController.text,
-          _addressController.text);
-
-      if (res == "success") {
-        setState(() {
-          _isLoading = false;
-        });
-        showSnackBar(
-          "Posted!",
-          context,
         );
-        clearImage();
-      } else {
+
+        if (res == "success") {
+          setState(() {
+            _isLoading = false;
+          });
+          showSnackBar(
+            "Story Posted!",
+            context,
+          );
+          clearImage();
+        } else {
+          setState(() {
+            _isLoading = false;
+          });
+          showSnackBar(res, context);
+        }
+      } catch (e) {
         setState(() {
           _isLoading = false;
         });
-        showSnackBar(res, context);
+        showSnackBar(e.toString(), context);
       }
-    } catch (e) {
-      setState(() {
-        _isLoading = false;
-      });
-      showSnackBar(e.toString(), context);
     }
   }
 
@@ -169,12 +228,15 @@ class _AddPostScreenState extends State<AddPostScreen> {
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
+          elevation: 0,
           backgroundColor: mobileBackgroundColor,
-          centerTitle: true,
           title: const Text(
             'Create Something!',
             style: TextStyle(
-                color: Colors.black, fontFamily: 'Pacifico', fontSize: 20),
+                color: Colors.black,
+                fontFamily: 'Poppins-Bold',
+                fontSize: 25,
+                fontWeight: FontWeight.bold),
           ),
         ),
         body: _isLoading
@@ -193,6 +255,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
               )
             : Stepper(
                 type: StepperType.horizontal,
+                elevation: 0,
                 steps: getSteps(),
                 currentStep: currentStep,
                 onStepContinue: () {
@@ -324,13 +387,13 @@ class _AddPostScreenState extends State<AddPostScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const Text(
-                    'Venue',
+                    'What is it?',
                     style: TextStyle(fontSize: 20),
                   ),
                   DropdownButton<String>(
-                    value: venue,
+                    value: formType,
                     elevation: 16,
-                    items: venueList.map<DropdownMenuItem<String>>(
+                    items: formTypeList.map<DropdownMenuItem<String>>(
                       (String e) {
                         return DropdownMenuItem(
                           value: e,
@@ -341,125 +404,161 @@ class _AddPostScreenState extends State<AddPostScreen> {
                     onChanged: (String? newValue) {
                       if (newValue == null) return;
                       setState(() {
-                        venue = newValue;
+                        formType = newValue;
                       });
                     },
                   ),
                 ],
               ),
-              const Divider(),
-              venue == "offline"
-                  ? TextField(
-                      controller: _addressController,
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        hintText: 'Write venue address',
-                      ),
-                      maxLines: 3,
-                    )
-                  : TextField(
-                      controller: _linkController,
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        hintText: 'Give link',
-                      ),
-                      maxLines: 1,
+              formType == "story"
+                  ? const Divider()
+                  : Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const Text(
+                              'Venue',
+                              style: TextStyle(fontSize: 20),
+                            ),
+                            DropdownButton<String>(
+                              value: venue,
+                              elevation: 16,
+                              items: venueList.map<DropdownMenuItem<String>>(
+                                (String e) {
+                                  return DropdownMenuItem(
+                                    value: e,
+                                    child: Text(e.toUpperCase()),
+                                  );
+                                },
+                              ).toList(),
+                              onChanged: (String? newValue) {
+                                if (newValue == null) return;
+                                setState(() {
+                                  venue = newValue;
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                        const Divider(),
+                        venue == "offline"
+                            ? TextField(
+                                controller: _addressController,
+                                decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  hintText: 'Write venue address',
+                                ),
+                                maxLines: 3,
+                              )
+                            : TextField(
+                                controller: _linkController,
+                                decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  hintText: 'Give link',
+                                ),
+                                maxLines: 1,
+                              ),
+                        const Divider(),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 8, horizontal: 20),
+                              decoration: BoxDecoration(
+                                border: Border.all(),
+                              ),
+                              child: Text(
+                                '${eventDate.day}/${eventDate.month}/${eventDate.year}',
+                                style: const TextStyle(fontSize: 20),
+                              ),
+                            ),
+                            OutlinedButton(
+                              onPressed: () async {
+                                DateTime? newDate = await showDatePicker(
+                                  context: context,
+                                  initialDate: eventDate,
+                                  firstDate: eventDate,
+                                  lastDate: DateTime(2080),
+                                );
+                                if (newDate == null) return;
+                                setState(() {
+                                  eventDate = newDate;
+                                });
+                              },
+                              child: const Text('Select event date'),
+                            ),
+                          ],
+                        ),
+                        const Divider(),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 8, horizontal: 39),
+                              decoration: BoxDecoration(
+                                border: Border.all(),
+                              ),
+                              child: Text(
+                                '${eventStartTime.hourOfPeriod}:${eventStartTime.minute} ${eventStartTime.period.name}',
+                                style: const TextStyle(fontSize: 20),
+                              ),
+                            ),
+                            OutlinedButton(
+                              onPressed: () async {
+                                TimeOfDay? newTime = await showTimePicker(
+                                    context: context,
+                                    initialTime: TimeOfDay.now());
+                                if (newTime == null) return;
+                                setState(() {
+                                  eventStartTime = newTime;
+                                });
+                              },
+                              child: const Text('Event start time'),
+                            ),
+                          ],
+                        ),
+                        const Divider(),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 8, horizontal: 39),
+                              decoration: BoxDecoration(
+                                border: Border.all(),
+                              ),
+                              child: Text(
+                                '${eventEndTime.hourOfPeriod}:${eventEndTime.minute} ${eventEndTime.period.name}',
+                                style: const TextStyle(fontSize: 20),
+                              ),
+                            ),
+                            OutlinedButton(
+                              onPressed: () async {
+                                TimeOfDay? newTime = await showTimePicker(
+                                    context: context,
+                                    initialTime: TimeOfDay.now());
+                                if (newTime == null) return;
+                                setState(() {
+                                  eventEndTime = newTime;
+                                });
+                              },
+                              child: const Text('Event end time'),
+                            ),
+                          ],
+                        ),
+                        const Divider(),
+                        const SizedBox(
+                          height: 20,
+                        )
+                      ],
                     ),
-              const Divider(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
-                    decoration: BoxDecoration(
-                      border: Border.all(),
-                    ),
-                    child: Text(
-                      '${eventDate.day}/${eventDate.month}/${eventDate.year}',
-                      style: const TextStyle(fontSize: 20),
-                    ),
-                  ),
-                  OutlinedButton(
-                    onPressed: () async {
-                      DateTime? newDate = await showDatePicker(
-                        context: context,
-                        initialDate: eventDate,
-                        firstDate: eventDate,
-                        lastDate: DateTime(2080),
-                      );
-                      if (newDate == null) return;
-                      setState(() {
-                        eventDate = newDate;
-                      });
-                    },
-                    child: const Text('Select event date'),
-                  ),
-                ],
-              ),
-              const Divider(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 8, horizontal: 39),
-                    decoration: BoxDecoration(
-                      border: Border.all(),
-                    ),
-                    child: Text(
-                      '${eventStartTime.hourOfPeriod}:${eventStartTime.minute} ${eventStartTime.period.name}',
-                      style: const TextStyle(fontSize: 20),
-                    ),
-                  ),
-                  OutlinedButton(
-                    onPressed: () async {
-                      TimeOfDay? newTime = await showTimePicker(
-                          context: context, initialTime: TimeOfDay.now());
-                      if (newTime == null) return;
-                      setState(() {
-                        eventStartTime = newTime;
-                      });
-                    },
-                    child: const Text('Event start time'),
-                  ),
-                ],
-              ),
-              const Divider(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 8, horizontal: 39),
-                    decoration: BoxDecoration(
-                      border: Border.all(),
-                    ),
-                    child: Text(
-                      '${eventEndTime.hourOfPeriod}:${eventEndTime.minute} ${eventEndTime.period.name}',
-                      style: const TextStyle(fontSize: 20),
-                    ),
-                  ),
-                  OutlinedButton(
-                    onPressed: () async {
-                      TimeOfDay? newTime = await showTimePicker(
-                          context: context, initialTime: TimeOfDay.now());
-                      if (newTime == null) return;
-                      setState(() {
-                        eventEndTime = newTime;
-                      });
-                    },
-                    child: const Text('Event end time'),
-                  ),
-                ],
-              ),
-              const Divider(),
-              const SizedBox(
-                height: 20,
-              )
             ],
           ),
         ),

@@ -18,11 +18,14 @@ class AboutScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: mobileBackgroundColor,
-        centerTitle: true,
+        elevation: 0,
         title: const Text(
           'About Us',
           style: TextStyle(
-              color: Colors.black, fontFamily: 'Pacifico', fontSize: 20),
+              color: Colors.black,
+              fontFamily: 'Poppins-Bold',
+              fontSize: 25,
+              fontWeight: FontWeight.bold),
         ),
       ),
       body: SingleChildScrollView(
