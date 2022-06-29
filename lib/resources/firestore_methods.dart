@@ -152,4 +152,14 @@ class FireStoreMethods {
       }
     }
   }
+
+  Future<void> deleteStory(String storyId) async {
+    try {
+      await _firestore.collection('stories').doc(storyId).delete();
+    } catch (e) {
+      if (kDebugMode) {
+        print(e.toString());
+      }
+    }
+  }
 }

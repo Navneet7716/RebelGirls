@@ -31,11 +31,17 @@ class _CommentsScreenState extends State<CommentsScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: secondaryAppBarColor,
+        elevation: 0,
+        backgroundColor: whiteColor,
+        iconTheme: const IconThemeData(color: Colors.black),
         title: const Text(
           'Comments',
+          style: TextStyle(
+              color: Colors.black,
+              fontFamily: 'Poppins-Bold',
+              fontSize: 25,
+              fontWeight: FontWeight.bold),
         ),
-        centerTitle: true,
       ),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance

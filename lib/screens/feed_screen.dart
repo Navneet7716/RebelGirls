@@ -12,145 +12,128 @@ class FeedScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: mobileBackgroundColor,
-        actions: [
-          PopupMenuButton(
-              icon: const Icon(
-                Icons.ac_unit,
-                color: Colors.black,
-              ),
-              itemBuilder: (context) {
-                return [
-                  const PopupMenuItem<int>(
-                    value: 0,
-                    child: Text("Logout"),
-                  ),
-                ];
-              },
-              onSelected: (value) async {
-                if (value == 0) {
-                  await AuthMethods().signOut();
-                  Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(
-                      builder: (context) => const LoginScreen(),
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: mobileBackgroundColor,
+          actions: [
+            PopupMenuButton(
+                icon: const Icon(
+                  Icons.ac_unit,
+                  color: Colors.black,
+                ),
+                itemBuilder: (context) {
+                  return [
+                    const PopupMenuItem<int>(
+                      value: 0,
+                      child: Text("Logout"),
                     ),
-                  );
-                }
-              }),
-        ],
-        title: const Text(
-          'Discover',
-          style: TextStyle(
-              color: Colors.black,
-              fontFamily: 'Poppins-Bold',
-              fontSize: 25,
-              fontWeight: FontWeight.bold),
+                  ];
+                },
+                onSelected: (value) async {
+                  if (value == 0) {
+                    await AuthMethods().signOut();
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (context) => const LoginScreen(),
+                      ),
+                    );
+                  }
+                }),
+          ],
+          title: const Text(
+            'Discover',
+            style: TextStyle(
+                color: Colors.black,
+                fontFamily: 'Poppins-Bold',
+                fontSize: 25,
+                fontWeight: FontWeight.bold),
+          ),
         ),
-      ),
-      body: SafeArea(
-        child: StreamBuilder(
-          stream: FirebaseFirestore.instance
-              .collection('posts')
-              .orderBy("datePublished", descending: true)
-              .limit(20)
-              .snapshots(),
-          builder: (context,
-              AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            if (snapshot.hasData) {
-              return ListView.builder(
-                  itemCount: snapshot.data!.docs.length,
-                  itemBuilder: (context, index) {
-                    if (index == 0) {
-                      return StreamBuilder(
-                        stream: FirebaseFirestore.instance
-                            .collection('stories')
-                            .orderBy("datePublished", descending: true)
-                            .limit(5)
-                            .snapshots(),
-                        builder: (contextex,
-                            AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
-                                snapshot2) {
-                          if (snapshot2.connectionState ==
-                              ConnectionState.waiting) {
-                            return const Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          }
-
-                          if (snapshot2.hasData) {
-                            return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    margin: const EdgeInsets.only(
-                                        left: 20, top: 20),
-                                    child: const Text(
-                                      'Voices',
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontFamily: 'Poppins-Bold',
-                                          fontSize: 22,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 270,
-                                    child: ListView.builder(
-                                      shrinkWrap: true,
-                                      scrollDirection: Axis.horizontal,
-                                      itemCount: snapshot2.data!.docs.length,
-                                      itemBuilder: (contexter, indexer) {
-                                        return StoryCard(
-                                            snap: snapshot2.data!.docs[indexer]
-                                                .data());
-                                      },
-                                    ),
-                                  ),
-                                  const Divider(),
-                                  Container(
-                                    margin: const EdgeInsets.only(
-                                        left: 20, top: 20),
-                                    child: const Text(
-                                      'Events',
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontFamily: 'Poppins-Bold',
-                                          fontSize: 22,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                  PostCard(
-                                    snap: snapshot.data!.docs[index].data(),
-                                  )
-                                ]);
-                          }
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
+        body: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                margin: const EdgeInsets.only(left: 20, top: 20),
+                child: const Text(
+                  'Voices',
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontFamily: 'Poppins-Bold',
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
+              StreamBuilder(
+                stream: FirebaseFirestore.instance
+                    .collection('stories')
+                    .orderBy("datePublished", descending: true)
+                    .limit(5)
+                    .snapshots(),
+                builder: (context,
+                    AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snaps) {
+                  if (snaps.hasData) {
+                    return SizedBox(
+                      height: 270,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: snaps.data!.docs.length,
+                        itemBuilder: (context, indexer) {
+                          return StoryCard(
+                              snap: snaps.data!.docs[indexer].data());
                         },
-                      );
-                    } else {
-                      return PostCard(
-                        snap: snapshot.data!.docs[index].data(),
-                      );
+                      ),
+                    );
+                  }
+
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                },
+              ),
+              const Divider(),
+              Container(
+                margin: const EdgeInsets.only(left: 20, top: 20),
+                child: const Text(
+                  'Events',
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontFamily: 'Poppins-Bold',
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
+              Flexible(
+                child: StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                      .collection('posts')
+                      .orderBy("datePublished", descending: true)
+                      .limit(20)
+                      .snapshots(),
+                  builder: (context,
+                      AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
+                          snaps) {
+                    if (snaps.hasData) {
+                      return ListView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: snaps.data!.docs.length,
+                          itemBuilder: (context, index) {
+                            return PostCard(
+                              snap: snaps.data!.docs[index].data(),
+                            );
+                          });
                     }
-                  });
-            } else {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-          },
-        ),
-      ),
-    );
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  },
+                ),
+              )
+            ],
+          ),
+        ));
   }
 }
