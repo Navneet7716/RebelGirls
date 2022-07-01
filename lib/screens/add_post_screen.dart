@@ -71,11 +71,27 @@ class _AddPostScreenState extends State<AddPostScreen> {
           return;
         }
 
+        if (venue == "online") {
+          RegExp regExp = RegExp(
+            "((http|https)://)(www.)?[a-zA-Z0-9@:%._\\+~#?&//=]{2,256}\\.[a-z]{2,6}\\b([-a-zA-Z0-9@:%._\\+~#?&//=]*)",
+            caseSensitive: false,
+            multiLine: false,
+          );
+
+          if (_linkController.text == "" ||
+              !regExp.hasMatch(_linkController.text)) {
+            showSnackBar('Give a proper url!', context);
+            setState(() {
+              _isLoading = false;
+            });
+            return;
+          }
+        }
+
         var result = await FlutterImageCompress.compressWithList(
           _file!,
           quality: 60,
         );
-
 
         String res = await FireStoreMethods().uploadPost(
             _titleController.text,

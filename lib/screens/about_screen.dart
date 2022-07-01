@@ -45,7 +45,7 @@ class AboutScreen extends StatelessWidget {
               ),
             ),
             const Padding(
-              padding: EdgeInsets.all(8.0),
+              padding: EdgeInsets.symmetric(horizontal: 8.0),
               child: Card(
                 elevation: 2,
                 child: Padding(

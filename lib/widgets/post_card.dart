@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:rebel_girls/modles/user.dart';
 import 'package:rebel_girls/providers/user_provider.dart';
-import 'package:rebel_girls/resources/auth_methods.dart';
+
 import 'package:rebel_girls/resources/firestore_methods.dart';
 import 'package:rebel_girls/screens/comments_screen.dart';
 import 'package:rebel_girls/screens/post_detail_screen.dart';
@@ -318,7 +318,7 @@ class _PostCardState extends State<PostCard> {
                   child: ElevatedButton(
                     style: widget.snap['volunteers'].contains(user.uid)
                         ? ElevatedButton.styleFrom(
-                            primary: Color.fromARGB(255, 188, 69, 0),
+                            primary: const Color.fromARGB(255, 188, 69, 0),
                           )
                         : ElevatedButton.styleFrom(
                             primary: primaryButtonColor,

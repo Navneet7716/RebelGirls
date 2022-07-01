@@ -8,7 +8,7 @@ import 'package:rebel_girls/utils/colors.dart';
 import 'package:rebel_girls/widgets/comment_card.dart';
 
 class StoryCommentScreen extends StatefulWidget {
-  final snap;
+  final dynamic snap;
 
   const StoryCommentScreen({Key? key, required this.snap}) : super(key: key);
 

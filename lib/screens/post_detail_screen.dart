@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:rebel_girls/utils/colors.dart';
@@ -30,7 +28,6 @@ class _PostDetailsState extends State<PostDetails> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getVolunteers();
   }
@@ -346,26 +343,29 @@ class _PostDetailsState extends State<PostDetails> {
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Card(
-                      child: Column(
-                        children: [
-                          const Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Text(
-                              'Volunteers',
-                              style: TextStyle(
-                                  fontSize: 25, fontWeight: FontWeight.bold),
+                  volunteers.isNotEmpty
+                      ? Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Card(
+                            child: Column(
+                              children: [
+                                const Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Text(
+                                    'Volunteers',
+                                    style: TextStyle(
+                                        fontSize: 25,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                                Column(
+                                  children: volunteers,
+                                )
+                              ],
                             ),
                           ),
-                          Column(
-                            children: volunteers,
-                          )
-                        ],
-                      ),
-                    ),
-                  )
+                        )
+                      : Container()
                 ],
               ),
             ),

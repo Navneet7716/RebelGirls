@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rebel_girls/screens/story_detail_screen.dart';
 
 class StoryCard extends StatefulWidget {
-  final snap;
+  final dynamic snap;
 
   const StoryCard({Key? key, required this.snap}) : super(key: key);
 
