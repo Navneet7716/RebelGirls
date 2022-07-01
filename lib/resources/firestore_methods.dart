@@ -46,7 +46,8 @@ class FireStoreMethods {
           datePublished: DateTime.now(),
           profImage: profImage,
           postUrl: photoUrl,
-          likes: []);
+          likes: [],
+          volunteers: []);
 
       _firestore.collection('posts').doc(postId).set(post.toJson());
 
@@ -133,6 +134,55 @@ class FireStoreMethods {
         });
       } else {
         print('Text is Empty!');
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print(e.toString());
+      }
+    }
+  }
+
+  Future<void> addStoryComment(String storyId, String text, String uid,
+      String name, String profilePic) async {
+    try {
+      if (text.isNotEmpty) {
+        String commentId = const Uuid().v1();
+
+        await _firestore
+            .collection('stories')
+            .doc(storyId)
+            .collection('comments')
+            .doc(commentId)
+            .set({
+          'profilePic': profilePic,
+          'name': name,
+          'uid': uid,
+          'text': text,
+          'commentId': commentId,
+          'datePublished': DateTime.now(),
+        });
+      } else {
+        if (kDebugMode) {
+          print('Text is Empty!');
+        }
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print(e.toString());
+      }
+    }
+  }
+
+  Future<void> addVolunteer(String postId, String uid, List volunteers) async {
+    try {
+      if (volunteers.contains(uid)) {
+        await _firestore.collection('posts').doc(postId).update({
+          'volunteers': FieldValue.arrayRemove([uid])
+        });
+      } else {
+        await _firestore.collection('posts').doc(postId).update({
+          'volunteers': FieldValue.arrayUnion([uid])
+        });
       }
     } catch (e) {
       if (kDebugMode) {

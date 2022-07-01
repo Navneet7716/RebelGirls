@@ -17,6 +17,7 @@ class Post {
   final String? eventLink;
   final String? eventAddress;
   final likes;
+  final volunteers;
 
   const Post({
     this.eventLink,
@@ -34,6 +35,7 @@ class Post {
     required this.profImage,
     required this.postUrl,
     required this.likes,
+    required this.volunteers,
   });
 
   Map<String, dynamic> toJson() => {
@@ -51,7 +53,8 @@ class Post {
         "datePublished": datePublished,
         "profImage": profImage,
         "postUrl": postUrl,
-        "likes": likes
+        "likes": likes,
+        "volunteers": volunteers
       };
 
   static Post fromSnap(DocumentSnapshot snap) {
@@ -65,6 +68,7 @@ class Post {
         profImage: snapshot['profImage'],
         postUrl: snapshot['postUrl'],
         likes: snapshot['likes'],
+        volunteers: snapshot['volunteers'],
         description: snapshot['description'],
         eventDate: snapshot['eventDate'],
         eventEndTime: snapshot['eventEndTime'],

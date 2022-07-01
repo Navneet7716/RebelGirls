@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:rebel_girls/modles/user.dart';
 import 'package:rebel_girls/providers/user_provider.dart';
+import 'package:rebel_girls/resources/auth_methods.dart';
 import 'package:rebel_girls/resources/firestore_methods.dart';
 import 'package:rebel_girls/screens/comments_screen.dart';
 import 'package:rebel_girls/screens/post_detail_screen.dart';
@@ -25,6 +26,8 @@ class PostCard extends StatefulWidget {
 class _PostCardState extends State<PostCard> {
   bool isLikeAnimating = false;
   int commentLen = 0;
+
+  bool loadingVolunteer = false;
 
   @override
   void initState() {
@@ -52,9 +55,9 @@ class _PostCardState extends State<PostCard> {
   Widget build(BuildContext context) {
     final User user = Provider.of<UserProvider>(context).getUser;
 
-    if (kDebugMode) {
-      print("this is ${user.uid}");
-    }
+    // if (kDebugMode) {
+    //   print("this is ${user.uid}");
+    // }
 
     return Padding(
       padding: const EdgeInsets.all(5.0),
@@ -303,7 +306,70 @@ class _PostCardState extends State<PostCard> {
                   ),
                 ],
               ),
-            )
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(
+                  width: 10,
+                ),
+                Expanded(
+                  child: ElevatedButton(
+                    style: widget.snap['volunteers'].contains(user.uid)
+                        ? ElevatedButton.styleFrom(
+                            primary: Color.fromARGB(255, 188, 69, 0),
+                          )
+                        : ElevatedButton.styleFrom(
+                            primary: primaryButtonColor,
+                          ),
+                    onPressed: () async {
+                      setState(() {
+                        loadingVolunteer = true;
+                      });
+                      await FireStoreMethods().addVolunteer(
+                          widget.snap['postId'],
+                          user.uid,
+                          widget.snap['volunteers']);
+                      setState(() {
+                        loadingVolunteer = false;
+                      });
+                    },
+                    child: loadingVolunteer
+                        ? const SizedBox(
+                            height: 25,
+                            width: 25,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                            ),
+                          )
+                        : !widget.snap['volunteers'].contains(user.uid)
+                            ? Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: const [
+                                  Icon(Icons.add),
+                                  Text('Want to be a volunteer?')
+                                ],
+                              )
+                            : Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: const [
+                                  Icon(Icons.check_circle_outline_rounded),
+                                  Text('You are already a volunteer 🥳')
+                                ],
+                              ),
+                  ),
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 10,
+            ),
           ],
         ),
       ),

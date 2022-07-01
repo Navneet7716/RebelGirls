@@ -51,7 +51,7 @@ class _CommentsScreenState extends State<CommentsScreen> {
             .orderBy('datePublished', descending: true)
             .snapshots(),
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
+          if (!snapshot.hasData) {
             return const Center(
               child: CircularProgressIndicator(),
             );
@@ -59,13 +59,13 @@ class _CommentsScreenState extends State<CommentsScreen> {
             return const Center(
               child: Text('No Comments yet!'),
             );
+          } else {
+            return ListView.builder(
+              itemCount: (snapshot.data! as dynamic).docs.length,
+              itemBuilder: (context, index) => CommentCard(
+                  snap: (snapshot.data! as dynamic).docs[index].data()),
+            );
           }
-
-          return ListView.builder(
-            itemCount: (snapshot.data! as dynamic).docs.length,
-            itemBuilder: (context, index) => CommentCard(
-                snap: (snapshot.data! as dynamic).docs[index].data()),
-          );
         },
       ),
       bottomNavigationBar: SafeArea(
@@ -81,12 +81,15 @@ class _CommentsScreenState extends State<CommentsScreen> {
                 backgroundImage: NetworkImage(user.photoUrl),
                 radius: 18,
               ),
+              const SizedBox(
+                width: 10,
+              ),
               Expanded(
                 flex: 1,
                 child: TextField(
                   controller: _commentController,
                   decoration: InputDecoration(
-                      hintText: 'Comment as ${user.username}',
+                      hintText: ' Comment as ${user.username}',
                       border: InputBorder.none),
                 ),
               ),

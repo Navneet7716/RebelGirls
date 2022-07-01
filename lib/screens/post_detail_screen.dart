@@ -1,10 +1,12 @@
+import 'dart:ffi';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:rebel_girls/utils/colors.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class PostDetails extends StatefulWidget {
-  final postData;
+  final dynamic postData;
 
   const PostDetails({Key? key, required this.postData}) : super(key: key);
 
@@ -15,6 +17,8 @@ class PostDetails extends StatefulWidget {
 class _PostDetailsState extends State<PostDetails> {
   Future<void>? _launched;
 
+  List<Widget> volunteers = [];
+
   Future<void> _launchInBrowser(Uri url) async {
     if (!await launchUrl(
       url,
@@ -22,6 +26,53 @@ class _PostDetailsState extends State<PostDetails> {
     )) {
       throw 'Could not launch $url';
     }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getVolunteers();
+  }
+
+  void getVolunteers() async {
+    List<Widget> l = [];
+
+    for (var item in widget.postData['volunteers']) {
+      var u =
+          await FirebaseFirestore.instance.collection('users').doc(item).get();
+      l.add(Container(
+        padding: const EdgeInsets.symmetric(
+          vertical: 18,
+          horizontal: 16,
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            CircleAvatar(
+              backgroundImage: NetworkImage(
+                u['photoUrl'],
+              ),
+              radius: 18,
+            ),
+            const SizedBox(
+              width: 10,
+            ),
+            Text(
+              u['username'],
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w200,
+              ),
+            )
+          ],
+        ),
+      ));
+    }
+    setState(() {
+      volunteers = l;
+    });
   }
 
   @override
@@ -49,239 +100,275 @@ class _PostDetailsState extends State<PostDetails> {
               fontWeight: FontWeight.bold),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-              child: Stack(
-                alignment: Alignment.bottomRight,
+      body: widget.postData['title'] == null
+          ? const Center(
+              child: Text("No Data"),
+            )
+          : SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  SizedBox(
-                    width: double.infinity,
-                    child: AspectRatio(
-                      aspectRatio: 1 / 1,
-                      child: Container(
-                          decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(25),
-                        image: DecorationImage(
-                          image: NetworkImage(
-                            '${widget.postData['postUrl']}',
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    child: Stack(
+                      alignment: Alignment.bottomRight,
+                      children: [
+                        SizedBox(
+                          width: double.infinity,
+                          child: AspectRatio(
+                            aspectRatio: 1 / 1,
+                            child: Container(
+                                decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(25),
+                              image: DecorationImage(
+                                image: NetworkImage(
+                                  '${widget.postData['postUrl']}',
+                                ),
+                                fit: BoxFit.fill,
+                                // alignment: FractionalOffset.topCenter,
+                              ),
+                            )),
                           ),
-                          fit: BoxFit.fill,
-                          // alignment: FractionalOffset.topCenter,
                         ),
-                      )),
+                        Container(
+                          height: 100,
+                          alignment: Alignment.bottomCenter,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(25),
+                              gradient: const LinearGradient(
+                                begin: Alignment.bottomCenter,
+                                end: Alignment.topCenter,
+                                colors: [
+                                  Color.fromARGB(255, 13, 13, 13),
+                                  Color.fromARGB(0, 48, 48, 48),
+                                ],
+                              )),
+                          width: double.infinity,
+                          child: Container(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 20.0),
+                            child: Text(
+                              '${widget.postData['title']}',
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontFamily: 'Pacifico',
+                                fontSize: 30,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Card(
+                      elevation: 2,
+                      child: Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: Text(
+                            '${widget.postData['description']}',
+                            style: const TextStyle(fontSize: 16),
+                          )),
                     ),
                   ),
                   Container(
-                    height: 100,
-                    alignment: Alignment.bottomCenter,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(25),
-                        gradient: const LinearGradient(
-                          begin: Alignment.bottomCenter,
-                          end: Alignment.topCenter,
-                          colors: [
-                            Color.fromARGB(255, 13, 13, 13),
-                            Color.fromARGB(0, 48, 48, 48),
+                    padding: const EdgeInsets.all(8.0),
+                    child: Card(
+                      elevation: 2,
+                      child: Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            //date
+                            Container(
+                              margin: const EdgeInsets.only(bottom: 10),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  const Text(
+                                    "Event Date:",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  Text(
+                                    '${(widget.postData['eventDate'] as Timestamp).toDate().day}-${(widget.postData['eventDate'] as Timestamp).toDate().month}-${(widget.postData['eventDate'] as Timestamp).toDate().year}',
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                            // time
+
+                            Container(
+                              margin: const EdgeInsets.only(bottom: 10),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  const Text(
+                                    "Event Time:",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  Text(
+                                    '${widget.postData['eventStartTime']} to ${widget.postData['eventEndTime']}',
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+
+                            // cost
+
+                            Container(
+                              margin: const EdgeInsets.only(bottom: 10),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: const [
+                                  Text(
+                                    "Cost:",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  Text(
+                                    'Free',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+
+                            // venue
+
+                            Container(
+                              margin: const EdgeInsets.only(bottom: 10),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  const Text(
+                                    "Venue:",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  Text(
+                                    '${widget.postData['venue']}',
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+
+                            widget.postData['venue'] == "offline"
+                                ? Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Text(
+                                        "Address:",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 200,
+                                        child: Text(
+                                          '${widget.postData['eventAddress']}',
+                                          style: const TextStyle(
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                : Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      const Text(
+                                        "Link:",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            _launched =
+                                                _launchInBrowser(toLaunch!);
+                                          });
+                                        },
+                                        style: const ButtonStyle(
+                                            visualDensity:
+                                                VisualDensity.compact),
+                                        child: const Text(
+                                          'Join',
+                                        ),
+                                      )
+                                    ],
+                                  ),
                           ],
-                        )),
-                    width: double.infinity,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                      child: Text(
-                        '${widget.postData['title']}',
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontFamily: 'Pacifico',
-                          fontSize: 30,
                         ),
                       ),
                     ),
                   ),
+                  Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Card(
+                      child: Column(
+                        children: [
+                          const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Text(
+                              'Volunteers',
+                              style: TextStyle(
+                                  fontSize: 25, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          Column(
+                            children: volunteers,
+                          )
+                        ],
+                      ),
+                    ),
+                  )
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Card(
-                elevation: 2,
-                child: Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: Text(
-                      '${widget.postData['description']}',
-                      style: const TextStyle(fontSize: 16),
-                    )),
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.all(8.0),
-              child: Card(
-                elevation: 2,
-                child: Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      //date
-                      Container(
-                        margin: const EdgeInsets.only(bottom: 10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            const Text(
-                              "Event Date:",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                              ),
-                            ),
-                            Text(
-                              '${(widget.postData['eventDate'] as Timestamp).toDate().day}-${(widget.postData['eventDate'] as Timestamp).toDate().month}-${(widget.postData['eventDate'] as Timestamp).toDate().year}',
-                              style: const TextStyle(
-                                fontSize: 16,
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                      // time
-
-                      Container(
-                        margin: const EdgeInsets.only(bottom: 10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            const Text(
-                              "Event Time:",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                              ),
-                            ),
-                            Text(
-                              '${widget.postData['eventStartTime']} to ${widget.postData['eventEndTime']}',
-                              style: const TextStyle(
-                                fontSize: 16,
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-
-                      // cost
-
-                      Container(
-                        margin: const EdgeInsets.only(bottom: 10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: const [
-                            Text(
-                              "Cost:",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                              ),
-                            ),
-                            Text(
-                              'Free',
-                              style: TextStyle(
-                                fontSize: 16,
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-
-                      // venue
-
-                      Container(
-                        margin: const EdgeInsets.only(bottom: 10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            const Text(
-                              "Venue:",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                              ),
-                            ),
-                            Text(
-                              '${widget.postData['venue']}',
-                              style: const TextStyle(
-                                fontSize: 16,
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-
-                      widget.postData['venue'] == "offline"
-                          ? Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  "Address:",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 200,
-                                  child: Text(
-                                    '${widget.postData['eventAddress']}',
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            )
-                          : Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                const Text(
-                                  "Link:",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                ElevatedButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      _launched = _launchInBrowser(toLaunch!);
-                                    });
-                                  },
-                                  style: const ButtonStyle(
-                                      visualDensity: VisualDensity.compact),
-                                  child: const Text(
-                                    'Join',
-                                  ),
-                                )
-                              ],
-                            ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:rebel_girls/modles/user.dart' as model;
@@ -70,10 +71,16 @@ class _AddPostScreenState extends State<AddPostScreen> {
           return;
         }
 
+        var result = await FlutterImageCompress.compressWithList(
+          _file!,
+          quality: 60,
+        );
+
+
         String res = await FireStoreMethods().uploadPost(
             _titleController.text,
             _descriptionController.text,
-            _file!,
+            result,
             uid,
             username,
             profImage,
@@ -130,10 +137,15 @@ class _AddPostScreenState extends State<AddPostScreen> {
           return;
         }
 
+        var result = await FlutterImageCompress.compressWithList(
+          _file!,
+          quality: 60,
+        );
+
         String res = await FireStoreMethods().uploadStory(
           _titleController.text,
           _descriptionController.text,
-          _file!,
+          result,
           uid,
           username,
           profImage,

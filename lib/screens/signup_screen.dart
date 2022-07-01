@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:rebel_girls/resources/auth_methods.dart';
 import 'package:rebel_girls/responsive/mobile_screen_layout.dart';
@@ -47,24 +47,73 @@ class _SignupScreenState extends State<SignupScreen> {
     setState(() {
       _isLoading = true;
     });
-    String res = await AuthMethods().signUpUser(
-      email: _emailController.text,
-      password: _passwordController.text,
-      username: _usernameController.text,
-      bio: _bioController.text,
-      file: _image!,
-    );
-    setState(() {
-      _isLoading = false;
-    });
-    if (res != 'success') {
-      showSnackBar(res, context);
-    } else {
-      Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) => const ResponsiveLayout(
-                mobileScreenLayout: MobileScreenLayout(),
-                webScreenLayout: WebScreenLayout(),
-              )));
+    try {
+      if (_image == null) {
+        showSnackBar('Image is Required!', context);
+        setState(() {
+          _isLoading = false;
+        });
+        return;
+      }
+      if (_usernameController.text.length < 2) {
+        showSnackBar('username is Required!', context);
+        setState(() {
+          _isLoading = false;
+        });
+        return;
+      }
+      if (_passwordController.text.length < 2) {
+        showSnackBar('Password is Required!', context);
+        setState(() {
+          _isLoading = false;
+        });
+        return;
+      }
+      if (_emailController.text.length < 2) {
+        showSnackBar('Email is Required!', context);
+        setState(() {
+          _isLoading = false;
+        });
+        return;
+      }
+      if (_bioController.text.length < 2) {
+        showSnackBar('Bio is Required!', context);
+        setState(() {
+          _isLoading = false;
+        });
+        return;
+      }
+
+      var result = await FlutterImageCompress.compressWithList(
+        _image!,
+        quality: 60,
+      );
+
+      String res = await AuthMethods().signUpUser(
+        email: _emailController.text,
+        password: _passwordController.text,
+        username: _usernameController.text,
+        bio: _bioController.text,
+        file: result,
+      );
+
+      setState(() {
+        _isLoading = false;
+      });
+      if (res != 'success') {
+        showSnackBar(res, context);
+      } else {
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+            builder: (context) => const ResponsiveLayout(
+                  mobileScreenLayout: MobileScreenLayout(),
+                  webScreenLayout: WebScreenLayout(),
+                )));
+      }
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+      showSnackBar(e.toString(), context);
     }
   }
 

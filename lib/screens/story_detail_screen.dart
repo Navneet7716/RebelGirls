@@ -3,9 +3,10 @@ import 'package:provider/provider.dart';
 import 'package:rebel_girls/modles/user.dart';
 import 'package:rebel_girls/providers/user_provider.dart';
 import 'package:rebel_girls/resources/firestore_methods.dart';
+import 'package:rebel_girls/screens/story_comment_screen.dart';
 
 class StoryDetails extends StatefulWidget {
-  final storyData;
+  final dynamic storyData;
 
   const StoryDetails({Key? key, required this.storyData}) : super(key: key);
 
@@ -135,14 +136,11 @@ class _StoryDetailsState extends State<StoryDetails> {
                     ),
                     Expanded(
                       child: SingleChildScrollView(
-                        child: SizedBox(
-                          height: 500,
-                          child: Text(
-                            widget.storyData['description'],
-                            style: const TextStyle(
-                                fontSize: 16,
-                                color: Color.fromARGB(255, 107, 107, 107)),
-                          ),
+                        child: Text(
+                          widget.storyData['description'],
+                          style: const TextStyle(
+                              fontSize: 16,
+                              color: Color.fromARGB(255, 107, 107, 107)),
                         ),
                       ),
                     ),
@@ -152,8 +150,16 @@ class _StoryDetailsState extends State<StoryDetails> {
                     SizedBox(
                       width: double.maxFinite,
                       child: ElevatedButton(
-                        onPressed: () {},
-                        child: Text('Comments'),
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  StoryCommentScreen(snap: widget.storyData),
+                            ),
+                          );
+
+                        },
+                        child: const Text('Comments'),
                       ),
                     ),
                   ],
