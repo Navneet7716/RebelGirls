@@ -29,10 +29,9 @@ class _PostDetailsState extends State<PostDetails> {
   @override
   void initState() {
     super.initState();
-    getVolunteers();
   }
 
-  void getVolunteers() async {
+  Future<List<Widget>> getVolunteers() async {
     List<Widget> l = [];
 
     for (var item in widget.postData['volunteers']) {
@@ -67,9 +66,7 @@ class _PostDetailsState extends State<PostDetails> {
         ),
       ));
     }
-    setState(() {
-      volunteers = l;
-    });
+    return l;
   }
 
   @override
@@ -103,8 +100,8 @@ class _PostDetailsState extends State<PostDetails> {
             )
           : SingleChildScrollView(
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Container(
                     padding:
@@ -129,37 +126,47 @@ class _PostDetailsState extends State<PostDetails> {
                             )),
                           ),
                         ),
-                        Container(
-                          height: 100,
-                          alignment: Alignment.bottomCenter,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(25),
-                              gradient: const LinearGradient(
-                                begin: Alignment.bottomCenter,
-                                end: Alignment.topCenter,
-                                colors: [
-                                  Color.fromARGB(255, 13, 13, 13),
-                                  Color.fromARGB(0, 48, 48, 48),
-                                ],
-                              )),
-                          width: double.infinity,
-                          child: Container(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 20.0),
-                            child: Text(
-                              '${widget.postData['title']}',
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontFamily: 'Pacifico',
-                                fontSize: 30,
-                              ),
-                            ),
-                          ),
-                        ),
+                        // Container(
+                        //   height: 100,
+                        //   alignment: Alignment.bottomCenter,
+                        //   decoration: BoxDecoration(
+                        //       borderRadius: BorderRadius.circular(25),
+                        //       gradient: const LinearGradient(
+                        //         begin: Alignment.bottomCenter,
+                        //         end: Alignment.topCenter,
+                        //         colors: [
+                        //           Color.fromARGB(255, 13, 13, 13),
+                        //           Color.fromARGB(0, 48, 48, 48),
+                        //         ],
+                        //       )),
+                        //   width: double.infinity,
+                        //   child: Container(
+                        //     padding:
+                        //         const EdgeInsets.symmetric(horizontal: 20.0),
+                        //     child: Text(
+                        //       '${widget.postData['title']}',
+                        //       overflow: TextOverflow.ellipsis,
+                        //       style: const TextStyle(
+                        //         color: Colors.white,
+                        //         fontFamily: 'Pacifico',
+                        //         fontSize: 30,
+                        //       ),
+                        //     ),
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Text(
+                    '${widget.postData['title']}',
+                    style: const TextStyle(
+                        fontSize: 25, fontWeight: FontWeight.w400),
+                    textAlign: TextAlign.center,
+                  ),
+                  const Divider(),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Card(
@@ -343,29 +350,53 @@ class _PostDetailsState extends State<PostDetails> {
                       ),
                     ),
                   ),
-                  volunteers.isNotEmpty
-                      ? Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Card(
-                            child: Column(
-                              children: [
-                                const Padding(
-                                  padding: EdgeInsets.all(8.0),
-                                  child: Text(
-                                    'Volunteers',
-                                    style: TextStyle(
+                  FutureBuilder(
+                      future: getVolunteers(),
+                      builder: (context, AsyncSnapshot<List<Widget>> wid) {
+                        if (wid.hasData) {
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Card(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: Text(
+                                      'Volunteers',
+                                      style: TextStyle(
                                         fontSize: 25,
-                                        fontWeight: FontWeight.bold),
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
                                   ),
-                                ),
-                                Column(
-                                  children: volunteers,
-                                )
-                              ],
+                                  ...wid.data!
+                                ],
+                              ),
                             ),
-                          ),
-                        )
-                      : Container()
+                          );
+                        }
+
+                        if (wid.hasError) {
+                          return const Center(
+                            child: (Text(
+                                'Some Error in Fetching your volunteers..')),
+                          );
+                        }
+
+                        return Column(
+                          children: const [
+                            Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text('Fetching your volunteers..')
+                          ],
+                        );
+                      })
                 ],
               ),
             ),

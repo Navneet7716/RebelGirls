@@ -392,24 +392,6 @@ class _AddPostScreenState extends State<AddPostScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              TextField(
-                controller: _titleController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'Write a Title',
-                ),
-                maxLines: 1,
-              ),
-              const Divider(),
-              TextField(
-                controller: _descriptionController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'Write a description',
-                ),
-                maxLines: 10,
-              ),
-              const Divider(),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -438,6 +420,27 @@ class _AddPostScreenState extends State<AddPostScreen> {
                   ),
                 ],
               ),
+              const SizedBox(
+                height: 20,
+              ),
+              TextField(
+                controller: _titleController,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: 'Write a Title',
+                ),
+                maxLines: 1,
+              ),
+              const Divider(),
+              TextField(
+                controller: _descriptionController,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: 'Write a description',
+                ),
+                maxLines: 10,
+              ),
+              const Divider(),
               formType == "story"
                   ? const Divider()
                   : Column(
