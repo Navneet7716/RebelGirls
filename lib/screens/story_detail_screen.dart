@@ -112,6 +112,7 @@ class _StoryDetailsState extends State<StoryDetails> {
                                   child: Padding(
                                     padding: const EdgeInsets.all(10.0),
                                     child: RichText(
+                                      textAlign: TextAlign.justify,
                                       text: TextSpan(
                                         children: [
                                           TextSpan(
@@ -134,15 +135,17 @@ class _StoryDetailsState extends State<StoryDetails> {
                                             ),
                                           ),
                                           TextSpan(
-                                              text: '\n' +
-                                                  DateFormat.yMMMd().format(
-                                                    widget.storyData[
-                                                            'datePublished']
-                                                        .toDate(),
-                                                  ),
-                                              style: const TextStyle(
-                                                  fontSize: 16,
-                                                  color: secondaryColor))
+                                            text: '\n' +
+                                                DateFormat.yMMMd().format(
+                                                  widget.storyData[
+                                                          'datePublished']
+                                                      .toDate(),
+                                                ),
+                                            style: const TextStyle(
+                                              fontSize: 16,
+                                              color: secondaryColor,
+                                            ),
+                                          ),
                                         ],
                                       ),
                                     ),

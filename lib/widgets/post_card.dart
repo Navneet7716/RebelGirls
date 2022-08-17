@@ -168,6 +168,7 @@ class _PostCardState extends State<PostCard> {
                           width: double.infinity,
                           child: CachedNetworkImage(
                             imageUrl: widget.snap['postUrl'],
+                            fit: BoxFit.cover,
                             placeholder: (context, url) =>
                                 const Text("Loading..."),
                           ),
@@ -273,12 +274,30 @@ class _PostCardState extends State<PostCard> {
                           ),
                         ),
                         Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.only(
-                              top: 8,
+                          width: double.infinity,
+                          padding: const EdgeInsets.only(
+                            top: 8,
+                          ),
+                          child: RichText(
+                            text: TextSpan(
+                              children: [
+                                TextSpan(
+                                  text: '${widget.snap['username']}:',
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                TextSpan(
+                                    text:
+                                        ' ${(widget.snap['description'] as String).substring(0, (widget.snap['description'] as String).length > 50 ? 50 : (widget.snap['description'] as String).length)} ${(widget.snap['description'] as String).length > 50 ? '- Read More...' : ''}',
+                                    style: const TextStyle(
+                                      color: Colors.black,
+                                    )),
+                              ],
                             ),
-                            child: Text(
-                                '${(widget.snap['description'] as String).substring(0, (widget.snap['description'] as String).length > 50 ? 50 : (widget.snap['description'] as String).length)} ${(widget.snap['description'] as String).length > 50 ? '- Read More...' : ''}')),
+                          ),
+                        ),
                         InkWell(
                           onTap: () {
                             Navigator.of(context).push(

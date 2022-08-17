@@ -136,34 +136,6 @@ class _PostDetailsState extends State<PostDetails> {
                             )),
                           ),
                         ),
-                        // Container(
-                        //   height: 100,
-                        //   alignment: Alignment.bottomCenter,
-                        //   decoration: BoxDecoration(
-                        //       borderRadius: BorderRadius.circular(25),
-                        //       gradient: const LinearGradient(
-                        //         begin: Alignment.bottomCenter,
-                        //         end: Alignment.topCenter,
-                        //         colors: [
-                        //           Color.fromARGB(255, 13, 13, 13),
-                        //           Color.fromARGB(0, 48, 48, 48),
-                        //         ],
-                        //       )),
-                        //   width: double.infinity,
-                        //   child: Container(
-                        //     padding:
-                        //         const EdgeInsets.symmetric(horizontal: 20.0),
-                        //     child: Text(
-                        //       '${widget.postData['title']}',
-                        //       overflow: TextOverflow.ellipsis,
-                        //       style: const TextStyle(
-                        //         color: Colors.white,
-                        //         fontFamily: 'Pacifico',
-                        //         fontSize: 30,
-                        //       ),
-                        //     ),
-                        //   ),
-                        // ),
                       ],
                     ),
                   ),
@@ -177,16 +149,22 @@ class _PostDetailsState extends State<PostDetails> {
                     textAlign: TextAlign.center,
                   ),
                   const Divider(),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Card(
-                      elevation: 2,
-                      child: Padding(
-                          padding: const EdgeInsets.all(15.0),
-                          child: Text(
-                            '${widget.postData['description']}',
-                            style: const TextStyle(fontSize: 16),
-                          )),
+                  SizedBox(
+                    width: double.infinity,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Card(
+                        elevation: 2,
+                        child: Padding(
+                            padding: const EdgeInsets.all(15.0),
+                            child: Text(
+                              '${widget.postData['description']}',
+                              textAlign: TextAlign.justify,
+                              style: const TextStyle(
+                                fontSize: 16,
+                              ),
+                            )),
+                      ),
                     ),
                   ),
                   Container(
@@ -371,15 +349,23 @@ class _PostDetailsState extends State<PostDetails> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  const Padding(
+                                  Padding(
                                     padding: EdgeInsets.all(8.0),
-                                    child: Text(
-                                      'Volunteers',
-                                      style: TextStyle(
-                                        fontSize: 25,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
+                                    child: [...wid.data!].isNotEmpty
+                                        ? const Text(
+                                            'Volunteers',
+                                            style: TextStyle(
+                                              fontSize: 25,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          )
+                                        : const Text(
+                                            'No Volunteers 😓',
+                                            style: TextStyle(
+                                              fontSize: 25,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
                                   ),
                                   ...wid.data!
                                 ],
