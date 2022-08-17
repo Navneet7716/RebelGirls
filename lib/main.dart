@@ -82,4 +82,4 @@ class MyApp extends StatelessWidget {
 }
 
 
-// flutter pub add cached_network_image
+// flutter build apk --split-per-abi
