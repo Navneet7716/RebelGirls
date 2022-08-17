@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:rebel_girls/utils/colors.dart';
@@ -94,7 +95,7 @@ Dream. Believe. Dare. Achieve.” """,
                           decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(25),
                         image: const DecorationImage(
-                          image: NetworkImage(
+                          image: CachedNetworkImageProvider(
                             'https://rebelgirls.in/wp-content/uploads/2020/10/WhatsApp-Image.jpeg',
                           ),
                           fit: BoxFit.fill,
@@ -145,7 +146,11 @@ final List<Widget> imageSliders = imgList
               borderRadius: const BorderRadius.all(Radius.circular(5.0)),
               child: Stack(
                 children: <Widget>[
-                  Image.network(item, fit: BoxFit.cover, width: 1000.0),
+                  CachedNetworkImage(
+                    imageUrl: item,
+                    fit: BoxFit.cover,
+                    width: 1000.0,
+                  ),
                 ],
               )),
         ))

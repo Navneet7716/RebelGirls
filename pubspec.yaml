@@ -42,8 +42,8 @@ dependencies:
   url_launcher: ^6.1.4
   carousel_slider: ^4.1.1
   flutter_image_compress: ^1.1.0
-  optimized_cached_image: ^3.0.1
   flutter_dotenv: ^5.0.2
+  cached_network_image: ^3.2.1
 
 
 dev_dependencies:

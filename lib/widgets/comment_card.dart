@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:rebel_girls/widgets/profile_image.dart';
 
 class CommentCard extends StatefulWidget {
   final dynamic snap;
@@ -20,11 +21,8 @@ class _CommentCardState extends State<CommentCard> {
       ),
       child: Row(
         children: [
-          CircleAvatar(
-            backgroundImage: NetworkImage(
-              widget.snap['profilePic'],
-            ),
-            radius: 18,
+          ProfileImage(
+            imageUrl: widget.snap['profilePic'],
           ),
           Expanded(
             child: Padding(

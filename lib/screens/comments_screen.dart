@@ -6,6 +6,7 @@ import 'package:rebel_girls/providers/user_provider.dart';
 import 'package:rebel_girls/resources/firestore_methods.dart';
 import 'package:rebel_girls/utils/colors.dart';
 import 'package:rebel_girls/widgets/comment_card.dart';
+import 'package:rebel_girls/widgets/profile_image.dart';
 
 class CommentsScreen extends StatefulWidget {
   final dynamic snap;
@@ -78,10 +79,7 @@ class _CommentsScreenState extends State<CommentsScreen> {
                 padding: const EdgeInsets.only(left: 16, right: 8),
                 child: Row(
                   children: [
-                    CircleAvatar(
-                      backgroundImage: NetworkImage(user.photoUrl),
-                      radius: 18,
-                    ),
+                    ProfileImage(imageUrl: user.photoUrl),
                     const SizedBox(
                       width: 10,
                     ),

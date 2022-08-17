@@ -1,8 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:optimized_cached_image/optimized_cached_image.dart';
 import 'package:provider/provider.dart';
 import 'package:rebel_girls/modles/user.dart';
 import 'package:rebel_girls/providers/user_provider.dart';
@@ -13,6 +13,7 @@ import 'package:rebel_girls/screens/post_detail_screen.dart';
 import 'package:rebel_girls/utils/colors.dart';
 import 'package:rebel_girls/utils/utils.dart';
 import 'package:rebel_girls/widgets/like_animation.dart';
+import 'package:rebel_girls/widgets/profile_image.dart';
 
 class PostCard extends StatefulWidget {
   // ignore: prefer_typing_uninitialized_variables
@@ -70,11 +71,7 @@ class _PostCardState extends State<PostCard> {
                     ).copyWith(right: 0),
                     child: Row(
                       children: [
-                        CircleAvatar(
-                          radius: 16,
-                          backgroundImage:
-                              NetworkImage(widget.snap['profImage']),
-                        ),
+                        ProfileImage(imageUrl: widget.snap['profImage']),
                         Expanded(
                           child: Padding(
                             padding: const EdgeInsets.only(
@@ -169,20 +166,11 @@ class _PostCardState extends State<PostCard> {
                         SizedBox(
                           height: MediaQuery.of(context).size.height * 0.35,
                           width: double.infinity,
-                          child: OptimizedCacheImage(
+                          child: CachedNetworkImage(
                             imageUrl: widget.snap['postUrl'],
-                            fit: BoxFit.cover,
-                            progressIndicatorBuilder:
-                                (context, url, downloadProgress) =>
-                                    CircularProgressIndicator(
-                                        value: downloadProgress.progress),
-                            errorWidget: (context, url, error) =>
-                                const Icon(Icons.error),
+                            placeholder: (context, url) =>
+                                const Text("Loading..."),
                           ),
-                          // child: Image.network(
-                          //   widget.snap['postUrl'],
-                          //   fit: BoxFit.cover,
-                          // ),
                         ),
                         AnimatedOpacity(
                           duration: const Duration(milliseconds: 200),

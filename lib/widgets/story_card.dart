@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:rebel_girls/screens/story_detail_screen.dart';
 
@@ -31,9 +32,8 @@ class _StoryCardState extends State<StoryCard> {
                   borderRadius: BorderRadius.circular(20),
                   color: Colors.white,
                   image: DecorationImage(
-                      image: NetworkImage(
-                        widget.snap['bannerImage'],
-                      ),
+                      image: CachedNetworkImageProvider(
+                          widget.snap['bannerImage']),
                       fit: BoxFit.fill),
                 ),
               ),

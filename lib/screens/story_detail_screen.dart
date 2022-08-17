@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -86,9 +87,13 @@ class _StoryDetailsState extends State<StoryDetails> {
                           letterSpacing: 1.2,
                         ),
                       ),
-                      background: Image.network(
-                        widget.storyData['bannerImage'],
+                      background: CachedNetworkImage(
+                        imageUrl: widget.storyData['bannerImage'],
                         fit: BoxFit.fill,
+                        placeholder: (context, url) =>
+                            const CircularProgressIndicator(),
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
                       ),
                     ),
                   ),
