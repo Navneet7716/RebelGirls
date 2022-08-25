@@ -29,7 +29,7 @@ class _StoryDetailsState extends State<StoryDetails> {
                 slivers: [
                   SliverAppBar(
                     actions: [
-                      user.uid == widget.storyData['uid']
+                      user.uid == widget.storyData['uid'] || user.isAdmin
                           ? IconButton(
                               onPressed: () async {
                                 showDialog(

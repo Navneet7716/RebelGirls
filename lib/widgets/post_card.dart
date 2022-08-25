@@ -45,12 +45,13 @@ class _PostCardState extends State<PostCard> {
           .collection('comments')
           .get();
 
-      commentLen = snap.docs.length;
+      var commentLen2 = snap.docs.length;
+      setState(() {
+        commentLen = commentLen2;
+      });
     } catch (e) {
       showSnackBar(e.toString(), context);
     }
-
-    setState(() {});
   }
 
   @override
@@ -61,6 +62,7 @@ class _PostCardState extends State<PostCard> {
         ? Padding(
             padding: const EdgeInsets.all(5.0),
             child: Card(
+              elevation: 5,
               color: mobileBackgroundColor,
               child: Column(
                 children: [
@@ -101,7 +103,7 @@ class _PostCardState extends State<PostCard> {
                             ),
                           ),
                         ),
-                        user.uid == widget.snap['uid']
+                        user.uid == widget.snap['uid'] || user.isAdmin
                             ? IconButton(
                                 onPressed: () {
                                   showDialog(
@@ -169,8 +171,8 @@ class _PostCardState extends State<PostCard> {
                           child: CachedNetworkImage(
                             imageUrl: widget.snap['postUrl'],
                             fit: BoxFit.cover,
-                            placeholder: (context, url) =>
-                                const Text("Loading..."),
+                            placeholder: (context, url) => const Center(
+                                child: CircularProgressIndicator()),
                           ),
                         ),
                         AnimatedOpacity(

@@ -212,4 +212,17 @@ class FireStoreMethods {
       }
     }
   }
+
+  Future<void> approveStory(String storyId) async {
+    try {
+      await _firestore.collection('stories').doc(storyId).update({
+        'approved': true,
+      });
+    } catch (e) {
+      if (kDebugMode) {
+        print(e.toString());
+      }
+    }
+  }
+
 }

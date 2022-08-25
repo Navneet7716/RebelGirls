@@ -94,7 +94,6 @@ class FeedScreen extends StatelessWidget {
                   );
                 },
               ),
-              const Divider(),
               Container(
                 margin: const EdgeInsets.only(left: 20, top: 20),
                 child: const Text(

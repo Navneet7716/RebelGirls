@@ -44,8 +44,8 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
 
     return Scaffold(
       body: PageView(
-        physics: const NeverScrollableScrollPhysics(),
-        children: homeScreenItems,
+        // physics: const NeverScrollableScrollPhysics(),
+        children: user != null && user.isAdmin ? homeScreenItemsAdmins : homeScreeItems,
         controller: pageController,
         onPageChanged: onPageChanged,
       ),
@@ -74,18 +74,18 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
                     backgroundColor: mobileBackgroundColor),
                 BottomNavigationBarItem(
                   icon: Icon(
-                    Icons.assignment_rounded,
+                    Icons.approval_rounded,
                     color: _page == 2 ? primaryColor : secondaryColor,
                   ),
-                  label: 'About',
+                  label: 'Approve',
                   backgroundColor: mobileBackgroundColor,
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(
-                    Icons.approval_rounded,
+                    Icons.assignment_rounded,
                     color: _page == 3 ? primaryColor : secondaryColor,
                   ),
-                  label: 'Approve',
+                  label: 'About',
                   backgroundColor: mobileBackgroundColor,
                 ),
               ]
