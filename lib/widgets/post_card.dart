@@ -403,8 +403,6 @@ class _PostCardState extends State<PostCard> {
               ),
             ),
           )
-        : const Center(
-            child: CircularProgressIndicator(),
-          );
+        : Container();
   }
 }
